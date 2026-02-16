@@ -1,0 +1,4 @@
+interface:
+  display_name: "BBDC CLI"
+  short_description: "Bitbucket Data Center CLI workflows"
+  default_prompt: "Use $bbdc-cli to run and summarize Bitbucket Data Center pull request workflows with bbdc."
