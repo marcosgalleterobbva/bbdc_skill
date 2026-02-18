@@ -54,4 +54,5 @@ Use this playbook to map user requests into concrete `bbdc` commands.
 - Omit `--version` unless the user explicitly provides it; CLI auto-fetches when supported.
 - For exploratory queries, include `--limit` and `--max-items` to constrain results.
 - For BBVA account introspection, prefer `account me` because it can return partial results and explicit `errors`.
+- Never append `--json` to `account me`; it already returns JSON and has no `--json` flag.
 - If output shows `HTTP 401` on account endpoints, explain HTTP access token scope limits vs PAT.

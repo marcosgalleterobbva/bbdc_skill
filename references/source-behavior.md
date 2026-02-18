@@ -57,6 +57,7 @@ Default caps in command implementations:
 - `account recent-repos` (`/api/latest/profile/recent/repos`)
 - `account ssh-keys` (`/ssh/latest/keys`)
 - `account gpg-keys` (`/gpg/latest/keys`)
+- `account me` has no `--json` flag and already prints JSON output by default.
 
 For BBVA HTTP access tokens:
 - Some user-account endpoints may return `401`.

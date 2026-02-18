@@ -34,6 +34,7 @@ Codex runtime note:
 - `account user`
 - `account settings`
 - `account me`
+- `account me` has no `--json` flag (it already outputs JSON)
 
 BBVA token scope note:
 - Project/Repository HTTP access tokens may return `401` for some account commands.

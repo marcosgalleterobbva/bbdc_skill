@@ -44,7 +44,9 @@ Prefer this skill for pull request lifecycle work, authenticated account lookups
 - Always require `BITBUCKET_SERVER` and `BITBUCKET_API_TOKEN`.
 - Require `BITBUCKET_SERVER` to end with `/rest`.
 - Never execute `bbdc` in Codex for this BBVA deployment.
-- Prefer `--json` for commands that support it, then summarize from user-provided output.
+- Prefer `--json` only when that exact command shows `--json` in `references/generated-command-inventory.md`.
+- Never infer `--json` from command-family patterns.
+- `account me` does not support `--json`; always use `account me` as-is.
 - Use narrow pagination (`--limit`, `--max-items`) for exploratory calls.
 - For mutating operations, describe the command and expected effect before user execution.
 - Treat `merge`, `rebase`, `decline`, and `delete` as high-risk operations.
@@ -59,6 +61,7 @@ Prefer this skill for pull request lifecycle work, authenticated account lookups
 ## Command Routing
 Use `references/command-map.md` for grouped commands and examples.
 Use `references/nl-intent-playbook.md` for intent-to-command templates.
+Validate command options against `references/generated-command-inventory.md` before returning final commands.
 
 If the source CLI changed or command details are uncertain, regenerate a live command table from source:
 

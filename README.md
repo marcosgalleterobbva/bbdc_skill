@@ -33,6 +33,10 @@ python3 scripts/generate_command_inventory.py \
   --output references/generated-command-inventory.md
 ```
 
+Option guardrail:
+- Validate flags against `references/generated-command-inventory.md` before suggesting commands.
+- Do not suggest `account me --json`; `account me` already returns JSON and has no `--json` option.
+
 ## Validate setup
 After install, from Codex ask:
 - "Use bbdc-cli to list open PRs in project X repo Y."
