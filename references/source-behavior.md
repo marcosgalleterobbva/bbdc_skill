@@ -5,8 +5,10 @@
 - [Validation and enums](#validation-and-enums)
 - [Auto-version behavior](#auto-version-behavior)
 - [Pagination behavior](#pagination-behavior)
+- [Authenticated account behavior](#authenticated-account-behavior)
 - [Raw vs JSON responses](#raw-vs-json-responses)
 - [Special REST routes](#special-rest-routes)
+- [Batch execution behavior](#batch-execution-behavior)
 - [Error semantics](#error-semantics)
 
 ## Core assumptions
@@ -49,6 +51,18 @@ Default caps in command implementations:
 - `--limit 50`
 - `--max-items 200`
 
+## Authenticated account behavior
+`account me` aggregates:
+- `account recent-repos` (`/api/latest/profile/recent/repos`)
+- `account ssh-keys` (`/ssh/latest/keys`)
+- `account gpg-keys` (`/gpg/latest/keys`)
+
+User profile/settings retrieval (`account user`, `account settings`, optional in `account me`) resolves slug in this order:
+1. `--user-slug`
+2. `BITBUCKET_USER_SLUG`
+3. `BITBUCKET_USERNAME`
+4. `BITBUCKET_USER`
+
 ## Raw vs JSON responses
 Some commands intentionally print raw text if the endpoint is non-JSON:
 - `pr diff`
@@ -65,8 +79,21 @@ Implemented through `request_rest`:
   - `comment-likes/latest/projects/.../reactions/...`
 - Rebase:
   - `git/latest/projects/.../pull-requests/<id>/rebase`
+- SSH keys:
+  - `ssh/latest/keys`
+- GPG keys:
+  - `gpg/latest/keys`
 
 These routes are built from `BITBUCKET_SERVER` directly (which already ends with `/rest`).
+
+## Batch execution behavior
+Batch commands are under `pr batch ...` and share a common executor:
+- Input is a JSON list from `--file` (or stdin with `-`).
+- `--project` and `--repo` act as defaults, merged into each item.
+- `--defaults` supports extra default fields (JSON literal or `@path`).
+- `--concurrency` controls worker pool size.
+- `--continue-on-error` is enabled by default.
+- `--json` emits an aggregate JSON payload with per-item outcomes.
 
 ## Error semantics
 For HTTP errors (`status >= 400`), CLI attempts to extract:

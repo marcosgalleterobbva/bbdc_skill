@@ -6,17 +6,7 @@ from __future__ import annotations
 import argparse
 import ast
 from pathlib import Path
-from typing import List, Tuple
-
-APP_PREFIX = {
-    "app": "",
-    "pr_app": "pr",
-    "participants_app": "pr participants",
-    "comments_app": "pr comments",
-    "blockers_app": "pr blockers",
-    "review_app": "pr review",
-    "auto_merge_app": "pr auto-merge",
-}
+from typing import Dict, List, Tuple
 
 
 def _is_typer_call(node: ast.AST) -> Tuple[str, List[str], bool] | None:
@@ -42,6 +32,50 @@ def _is_typer_call(node: ast.AST) -> Tuple[str, List[str], bool] | None:
             elif arg.value is Ellipsis:
                 required = True
     return kind, flags, required
+
+
+def _build_app_prefixes(module: ast.Module) -> Dict[str, str]:
+    prefixes: Dict[str, str] = {"app": ""}
+    edges: List[Tuple[str, str, str]] = []
+
+    for node in module.body:
+        if not isinstance(node, ast.Expr):
+            continue
+        call = node.value
+        if not isinstance(call, ast.Call):
+            continue
+        func = call.func
+        if not isinstance(func, ast.Attribute) or func.attr != "add_typer":
+            continue
+        if not isinstance(func.value, ast.Name):
+            continue
+        if not call.args or not isinstance(call.args[0], ast.Name):
+            continue
+
+        parent_app = func.value.id
+        child_app = call.args[0].id
+
+        child_name = ""
+        for kw in call.keywords:
+            if kw.arg == "name" and isinstance(kw.value, ast.Constant) and isinstance(kw.value.value, str):
+                child_name = kw.value.value.strip()
+                break
+        if not child_name:
+            continue
+
+        edges.append((parent_app, child_app, child_name))
+
+    changed = True
+    while changed:
+        changed = False
+        for parent_app, child_app, child_name in edges:
+            if parent_app not in prefixes or child_app in prefixes:
+                continue
+            parent_prefix = prefixes[parent_app]
+            prefixes[child_app] = f"{parent_prefix} {child_name}".strip()
+            changed = True
+
+    return prefixes
 
 
 def _parameter_cells(fn: ast.FunctionDef) -> str:
@@ -76,6 +110,7 @@ def _parameter_cells(fn: ast.FunctionDef) -> str:
 
 
 def _command_rows(module: ast.Module) -> List[Tuple[str, str, str, str]]:
+    app_prefix = _build_app_prefixes(module)
     rows: List[Tuple[str, str, str, str]] = []
     for node in module.body:
         if not isinstance(node, ast.FunctionDef):
@@ -92,7 +127,7 @@ def _command_rows(module: ast.Module) -> List[Tuple[str, str, str, str]]:
                 continue
 
             app_name = dec.func.value.id
-            prefix = APP_PREFIX.get(app_name)
+            prefix = app_prefix.get(app_name)
             if prefix is None:
                 continue
 
@@ -111,11 +146,19 @@ def _command_rows(module: ast.Module) -> List[Tuple[str, str, str, str]]:
     return rows
 
 
+def _source_label(source: Path) -> str:
+    parts = source.parts
+    if len(parts) >= 2 and parts[-2] == "bbdc_cli" and parts[-1] == "__main__.py":
+        return "bbdc_cli/__main__.py"
+    return source.name
+
+
 def generate_markdown(source: Path, rows: List[Tuple[str, str, str, str]]) -> str:
+    source_label = _source_label(source)
     lines = [
         "# bbdc CLI Command Inventory",
         "",
-        f"Source: `{source}`",
+        f"Source: `{source_label}`",
         "",
         "`*` marks required option/argument.",
         "",

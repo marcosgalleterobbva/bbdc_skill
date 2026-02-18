@@ -1,14 +1,14 @@
 ---
 name: bbdc-cli
-description: Execute and troubleshoot Bitbucket Data Center pull-request workflows with the bbdc CLI. Use when tasks mention bbdc, Bitbucket Data Center, pull-request lifecycle operations (list/create/update/merge/review/comments/blockers), repository participant management, PR diffs/patches, or when translating natural-language Bitbucket requests into exact shell commands.
+description: Execute and troubleshoot Bitbucket Data Center workflows with the bbdc CLI. Use when tasks mention bbdc, Bitbucket Data Center, pull-request lifecycle operations (list/create/update/merge/review/comments/blockers), authenticated-account lookups (recent repos, SSH/GPG keys, profile/settings), repository participant management, PR diffs/patches, or when translating natural-language Bitbucket requests into exact shell commands.
 ---
 
 # Bbdc CLI
 
 ## Overview
-Use this skill to translate Bitbucket Data Center requests into `bbdc` shell commands, execute them safely, and summarize results.
+Use this skill to translate natural-language Bitbucket Data Center requests into `bbdc` commands, execute safely, and return concise results.
 
-Prefer this skill whenever the user asks for pull-request operations in Bitbucket DC through CLI calls.
+Prefer this skill for pull request lifecycle work, authenticated account lookups, participants/reviewers, comments/blockers, rebase/merge checks, and batch PR workflows.
 
 ## Quick Start
 1. Resolve the executable:
@@ -20,6 +20,25 @@ Prefer this skill whenever the user asks for pull-request operations in Bitbucke
    - Read-only inspection: use list/get/diff/activities style commands.
    - Mutating operation: create/update/review/merge/rebase/delete with confirmation-sensitive handling.
 
+## Natural-Language Workflow
+1. Classify the request:
+   - Account lookup vs PR workflow.
+   - Single PR vs multi-PR batch.
+   - Read-only vs state-changing.
+2. Extract required slots:
+   - PR workflows: `project`, `repo` (and usually `pr_id`).
+   - Account workflows: optional `user_slug` for profile/settings.
+   - PR-targeted: `pr_id`.
+   - Command-specific fields (reviewers, comment text, status, branch names, etc.).
+3. If required slots are missing, ask focused follow-up questions before running commands.
+4. Build the narrowest command that satisfies the user request.
+5. For mutating commands:
+   - Show the exact command and expected effect before execution.
+6. After execution, return:
+   - Command run.
+   - Key IDs/state changes.
+   - One verification command when useful.
+
 ## Execution Rules
 - Always require `BITBUCKET_SERVER` and `BITBUCKET_API_TOKEN`.
 - Require `BITBUCKET_SERVER` to end with `/rest`.
@@ -27,15 +46,25 @@ Prefer this skill whenever the user asks for pull-request operations in Bitbucke
 - Use narrow pagination (`--limit`, `--max-items`) for exploratory calls.
 - For mutating operations, describe the command and expected effect before execution.
 - Treat `merge`, `rebase`, `decline`, and `delete` as high-risk operations.
+- Treat `pr batch ...` mutating commands as high-risk operations.
 
 ## Command Routing
 Use `references/command-map.md` for grouped commands and examples.
+Use `references/nl-intent-playbook.md` for intent-to-command templates.
 
 If the source CLI changed or command details are uncertain, regenerate a live command table from source:
 
 ```bash
 python scripts/generate_command_inventory.py \
-  --source /Users/O000142/Projects/bb-cli/bbdc_cli/__main__.py
+  --source <PATH_TO_BBDC_CLI_MAIN>
+```
+
+For full command coverage (including `pr batch ...`), refresh:
+
+```bash
+python scripts/generate_command_inventory.py \
+  --source <PATH_TO_BBDC_CLI_MAIN> \
+  --output references/generated-command-inventory.md
 ```
 
 ## Mutating Workflow Pattern
@@ -58,6 +87,14 @@ python scripts/generate_command_inventory.py \
   - `<bbdc-cmd> pr comments list -p <PROJECT> -r <REPO> <PR_ID> --path <FILE_PATH>`
 - Rebase check:
   - `<bbdc-cmd> pr rebase-check -p <PROJECT> -r <REPO> <PR_ID>`
+- Batch approve:
+  - `<bbdc-cmd> pr batch approve -p <PROJECT> -r <REPO> -f <FILE.json>`
+- Account snapshot:
+  - `<bbdc-cmd> account me`
+- Account SSH keys:
+  - `<bbdc-cmd> account ssh-keys --json`
+- Account GPG keys:
+  - `<bbdc-cmd> account gpg-keys --json`
 
 ## Output Normalization
 When users ask for summaries, convert PR JSON into a Markdown table:

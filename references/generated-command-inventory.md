@@ -1,11 +1,17 @@
 # bbdc CLI Command Inventory
 
-Source: `/Users/O000142/Projects/bb-cli/bbdc_cli/__main__.py`
+Source: `bbdc_cli/__main__.py`
 
 `*` marks required option/argument.
 
 | Group | Command | Function | Parameters |
 |---|---|---|---|
+| account | `account gpg-keys` | `account_gpg_keys` | `--user, --limit, --max-items, --json` |
+| account | `account me` | `account_me` | `--user-slug, --include-profile/--no-include-profile, --include-settings/--no-include-settings, --limit, --max-items` |
+| account | `account recent-repos` | `account_recent_repos` | `--limit, --max-items, --json` |
+| account | `account settings` | `account_settings` | `--user-slug` |
+| account | `account ssh-keys` | `account_ssh_keys` | `--user, --limit, --max-items, --json` |
+| account | `account user` | `account_user` | `--user-slug` |
 | pr | `pr activities` | `pr_activities` | `--project/-p*, --repo/-r*, <pr_id>*, --from-id, --from-type, --limit, --max-items, --json` |
 | pr | `pr approve` | `pr_approve` | `--project/-p*, --repo/-r*, <pr_id>*` |
 | pr | `pr changes` | `pr_changes` | `--project/-p*, --repo/-r*, <pr_id>*, --change-scope, --since-id, --until-id, --with-comments/--no-with-comments, --limit, --max-items, --json` |
@@ -35,6 +41,43 @@ Source: `/Users/O000142/Projects/bb-cli/bbdc_cli/__main__.py`
 | pr auto-merge | `pr auto-merge cancel` | `pr_auto_merge_cancel` | `--project/-p*, --repo/-r*, <pr_id>*` |
 | pr auto-merge | `pr auto-merge get` | `pr_auto_merge_get` | `--project/-p*, --repo/-r*, <pr_id>*` |
 | pr auto-merge | `pr auto-merge set` | `pr_auto_merge_set` | `--project/-p*, --repo/-r*, <pr_id>*` |
+| pr batch | `pr batch approve` | `pr_batch_approve` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch | `pr batch comment` | `pr_batch_comment` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch | `pr batch commit-message` | `pr_batch_commit_message` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch | `pr batch create` | `pr_batch_create` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch | `pr batch decline` | `pr_batch_decline` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch | `pr batch delete` | `pr_batch_delete` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch | `pr batch get` | `pr_batch_get` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch | `pr batch merge` | `pr_batch_merge` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch | `pr batch merge-base` | `pr_batch_merge_base` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch | `pr batch merge-check` | `pr_batch_merge_check` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch | `pr batch rebase` | `pr_batch_rebase` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch | `pr batch rebase-check` | `pr_batch_rebase_check` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch | `pr batch reopen` | `pr_batch_reopen` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch | `pr batch unapprove` | `pr_batch_unapprove` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch | `pr batch unwatch` | `pr_batch_unwatch` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch | `pr batch update` | `pr_batch_update` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch | `pr batch watch` | `pr_batch_watch` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch auto-merge | `pr batch auto-merge cancel` | `pr_batch_auto_merge_cancel` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch auto-merge | `pr batch auto-merge get` | `pr_batch_auto_merge_get` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch auto-merge | `pr batch auto-merge set` | `pr_batch_auto_merge_set` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch blockers | `pr batch blockers add` | `pr_batch_blockers_add` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch blockers | `pr batch blockers delete` | `pr_batch_blockers_delete` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch blockers | `pr batch blockers get` | `pr_batch_blockers_get` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch blockers | `pr batch blockers update` | `pr_batch_blockers_update` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch comments | `pr batch comments add` | `pr_batch_comments_add` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch comments | `pr batch comments apply-suggestion` | `pr_batch_comments_apply_suggestion` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch comments | `pr batch comments delete` | `pr_batch_comments_delete` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch comments | `pr batch comments get` | `pr_batch_comments_get` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch comments | `pr batch comments react` | `pr_batch_comments_react` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch comments | `pr batch comments unreact` | `pr_batch_comments_unreact` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch comments | `pr batch comments update` | `pr_batch_comments_update` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch participants | `pr batch participants add` | `pr_batch_participants_add` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch participants | `pr batch participants remove` | `pr_batch_participants_remove` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch participants | `pr batch participants status` | `pr_batch_participants_status` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch review | `pr batch review complete` | `pr_batch_review_complete` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch review | `pr batch review discard` | `pr_batch_review_discard` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
+| pr batch review | `pr batch review get` | `pr_batch_review_get` | `--file/-f*, --project/-p, --repo/-r, --defaults, --concurrency/-c, --continue-on-error/--stop-on-error, --json` |
 | pr blockers | `pr blockers add` | `pr_blockers_add` | `--project/-p*, --repo/-r*, <pr_id>*, --text/-t*, --json` |
 | pr blockers | `pr blockers delete` | `pr_blockers_delete` | `--project/-p*, --repo/-r*, <pr_id>*, <comment_id>*, --version` |
 | pr blockers | `pr blockers get` | `pr_blockers_get` | `--project/-p*, --repo/-r*, <pr_id>*, <comment_id>*` |
@@ -56,4 +99,4 @@ Source: `/Users/O000142/Projects/bb-cli/bbdc_cli/__main__.py`
 | pr review | `pr review complete` | `pr_review_complete` | `--project/-p*, --repo/-r*, <pr_id>*, --comment, --last-reviewed-commit, --status, --json` |
 | pr review | `pr review discard` | `pr_review_discard` | `--project/-p*, --repo/-r*, <pr_id>*` |
 | pr review | `pr review get` | `pr_review_get` | `--project/-p*, --repo/-r*, <pr_id>*` |
-| root | `doctor` | `doctor` | `` |
+| root | `doctor` | `doctor` | `--json` |
