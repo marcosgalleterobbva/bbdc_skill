@@ -15,7 +15,8 @@ Prefer this skill for pull request lifecycle work, authenticated account lookups
    - Prefer `bbdc` if present in `PATH`.
    - Fallback to `python -m bbdc_cli`.
 2. Validate auth and base URL before workflows:
-   - Run `<bbdc-cmd> doctor`.
+   - Try `<bbdc-cmd> doctor`.
+   - If execution fails with DNS/network/runtime errors in Codex, switch to command-only mode (do not keep retrying).
 3. Choose mode:
    - Read-only inspection: use list/get/diff/activities style commands.
    - Mutating operation: create/update/review/merge/rebase/delete with confirmation-sensitive handling.
@@ -47,6 +48,11 @@ Prefer this skill for pull request lifecycle work, authenticated account lookups
 - For mutating operations, describe the command and expected effect before execution.
 - Treat `merge`, `rebase`, `decline`, and `delete` as high-risk operations.
 - Treat `pr batch ...` mutating commands as high-risk operations.
+- If Codex runtime cannot reach Bitbucket (for example `NameResolutionError`, DNS failure, or connection timeout), stop local execution attempts and ask the user to run commands in their own terminal.
+- In command-only mode, return:
+  - Exact command(s) to run.
+  - Expected output fields to copy back.
+  - A short next-step command for verification.
 
 ## Command Routing
 Use `references/command-map.md` for grouped commands and examples.
@@ -110,3 +116,11 @@ Use `references/source-behavior.md` for:
 - version and comment-version auto-fetch behavior,
 - endpoints implemented through `request_rest`,
 - error semantics returned by the CLI.
+
+Common Codex-runtime network failure pattern:
+- `Request failed: HTTPSConnectionPool(... NameResolutionError ... Failed to resolve ...)`
+
+When this happens:
+1. Do not block the workflow.
+2. Provide exact `bbdc` commands for the user to run locally.
+3. Continue once the user shares command output.

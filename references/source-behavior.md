@@ -6,6 +6,7 @@
 - [Auto-version behavior](#auto-version-behavior)
 - [Pagination behavior](#pagination-behavior)
 - [Authenticated account behavior](#authenticated-account-behavior)
+- [Codex runtime behavior](#codex-runtime-behavior)
 - [Raw vs JSON responses](#raw-vs-json-responses)
 - [Special REST routes](#special-rest-routes)
 - [Batch execution behavior](#batch-execution-behavior)
@@ -62,6 +63,17 @@ User profile/settings retrieval (`account user`, `account settings`, optional in
 2. `BITBUCKET_USER_SLUG`
 3. `BITBUCKET_USERNAME`
 4. `BITBUCKET_USER`
+
+## Codex runtime behavior
+When executed from Codex agent runtimes, DNS/VPN/network access to Bitbucket may be unavailable even if the user can run `bbdc` locally.
+
+Typical failure signature:
+- `Request failed: HTTPSConnectionPool(... NameResolutionError ... Failed to resolve ...)`
+
+Recommended handling in the skill:
+- Do not keep retrying the same call in Codex.
+- Switch to command-only guidance and ask the user to run commands locally.
+- Continue once command output is provided by the user.
 
 ## Raw vs JSON responses
 Some commands intentionally print raw text if the endpoint is non-JSON:

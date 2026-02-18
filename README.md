@@ -37,3 +37,11 @@ After install, from Codex ask:
 Skill should run:
 - `bbdc doctor`
 - followed by mapped commands such as `bbdc pr ...` or `bbdc account ...`.
+
+## Known Codex limitation
+In some Codex runtimes, `bbdc` execution can fail due to DNS/network constraints (for example `NameResolutionError`) even when the user can run the same commands locally.
+
+Expected skill behavior:
+1. Stop retrying failed network calls in Codex.
+2. Provide exact `bbdc` commands for the user to run in their terminal.
+3. Continue once the user shares command output.

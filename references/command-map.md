@@ -18,6 +18,9 @@ Required variables:
 Recommended startup check:
 - `<bbdc-cmd> doctor`
 
+Codex runtime note:
+- If `doctor` fails with DNS/network errors (for example `NameResolutionError`), provide commands for the user to run locally instead of retrying in Codex.
+
 ## Top-level commands
 - `doctor`
 - `account ...`
