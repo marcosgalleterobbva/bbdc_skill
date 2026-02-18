@@ -1,4 +1,4 @@
 interface:
   display_name: "BBDC CLI"
   short_description: "Bitbucket Data Center CLI workflows"
-  default_prompt: "Use $bbdc-cli to translate natural-language Bitbucket Data Center requests (PR workflows and authenticated-account lookups) into safe bbdc commands. If Codex runtime execution fails due to network/DNS issues, provide commands for the user to run locally and continue from their output."
+  default_prompt: "Use $bbdc-cli to translate natural-language Bitbucket Data Center requests (PR workflows and authenticated-account lookups) into safe bbdc commands. Never execute bbdc in Codex; always provide commands for the user to run locally and continue from their output."

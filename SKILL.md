@@ -1,12 +1,12 @@
 ---
 name: bbdc-cli
-description: Execute and troubleshoot Bitbucket Data Center workflows with the bbdc CLI. Use when tasks mention bbdc, Bitbucket Data Center, pull-request lifecycle operations (list/create/update/merge/review/comments/blockers), authenticated-account lookups (recent repos, SSH/GPG keys, profile/settings), repository participant management, PR diffs/patches, or when translating natural-language Bitbucket requests into exact shell commands.
+description: Generate and troubleshoot Bitbucket Data Center workflows with the bbdc CLI. Use when tasks mention bbdc, Bitbucket Data Center, pull-request lifecycle operations (list/create/update/merge/review/comments/blockers), authenticated-account lookups (recent repos, SSH/GPG keys, profile/settings), repository participant management, PR diffs/patches, or when translating natural-language Bitbucket requests into exact shell commands.
 ---
 
 # Bbdc CLI
 
 ## Overview
-Use this skill to translate natural-language Bitbucket Data Center requests into `bbdc` commands, execute safely, and return concise results.
+Use this skill to translate natural-language Bitbucket Data Center requests into `bbdc` commands for the user to run locally, then summarize results from user-provided output.
 
 Prefer this skill for pull request lifecycle work, authenticated account lookups, participants/reviewers, comments/blockers, rebase/merge checks, and batch PR workflows.
 
@@ -14,9 +14,9 @@ Prefer this skill for pull request lifecycle work, authenticated account lookups
 1. Resolve the executable:
    - Prefer `bbdc` if present in `PATH`.
    - Fallback to `python -m bbdc_cli`.
-2. Validate auth and base URL before workflows:
-   - Try `<bbdc-cmd> doctor`.
-   - If execution fails with DNS/network/runtime errors in Codex, switch to command-only mode (do not keep retrying).
+2. Execution model for BBVA infrastructure:
+   - Never execute `bbdc` from Codex.
+   - Always provide commands for the user to run in their own terminal.
 3. Choose mode:
    - Read-only inspection: use list/get/diff/activities style commands.
    - Mutating operation: create/update/review/merge/rebase/delete with confirmation-sensitive handling.
@@ -31,25 +31,25 @@ Prefer this skill for pull request lifecycle work, authenticated account lookups
    - Account workflows: optional `user_slug` for profile/settings.
    - PR-targeted: `pr_id`.
    - Command-specific fields (reviewers, comment text, status, branch names, etc.).
-3. If required slots are missing, ask focused follow-up questions before running commands.
+3. If required slots are missing, ask focused follow-up questions before generating commands.
 4. Build the narrowest command that satisfies the user request.
 5. For mutating commands:
-   - Show the exact command and expected effect before execution.
-6. After execution, return:
-   - Command run.
-   - Key IDs/state changes.
+   - Show the exact command and expected effect before the user runs it.
+6. Return:
+   - Exact command(s) for the user to run.
+   - Expected output fields to paste back.
    - One verification command when useful.
 
 ## Execution Rules
 - Always require `BITBUCKET_SERVER` and `BITBUCKET_API_TOKEN`.
 - Require `BITBUCKET_SERVER` to end with `/rest`.
-- Prefer `--json` for commands that support it, then summarize into concise Markdown for the user.
+- Never execute `bbdc` in Codex for this BBVA deployment.
+- Prefer `--json` for commands that support it, then summarize from user-provided output.
 - Use narrow pagination (`--limit`, `--max-items`) for exploratory calls.
-- For mutating operations, describe the command and expected effect before execution.
+- For mutating operations, describe the command and expected effect before user execution.
 - Treat `merge`, `rebase`, `decline`, and `delete` as high-risk operations.
 - Treat `pr batch ...` mutating commands as high-risk operations.
-- If Codex runtime cannot reach Bitbucket (for example `NameResolutionError`, DNS failure, or connection timeout), stop local execution attempts and ask the user to run commands in their own terminal.
-- In command-only mode, return:
+- Return command-only guidance:
   - Exact command(s) to run.
   - Expected output fields to copy back.
   - A short next-step command for verification.
@@ -74,12 +74,12 @@ python scripts/generate_command_inventory.py \
 ```
 
 ## Mutating Workflow Pattern
-1. Fetch current state if needed (`pr get`, `participants list`, `comments get`).
+1. Generate state-inspection command(s) if needed (`pr get`, `participants list`, `comments get`).
 2. If versioned endpoint is involved, allow auto-version behavior by omitting `--version` unless the user supplies one.
-3. Execute the command.
+3. Provide the command for the user to execute.
 4. Return:
-   - Exact command run.
-   - Key resulting IDs/URL/state.
+   - Exact command generated.
+   - Key fields to copy from output (IDs/URL/state).
    - Any follow-up command needed for verification.
 
 ## Common Tasks
@@ -117,10 +117,10 @@ Use `references/source-behavior.md` for:
 - endpoints implemented through `request_rest`,
 - error semantics returned by the CLI.
 
-Common Codex-runtime network failure pattern:
+BBVA Codex-runtime network limitation pattern:
 - `Request failed: HTTPSConnectionPool(... NameResolutionError ... Failed to resolve ...)`
 
 When this happens:
-1. Do not block the workflow.
+1. Do not attempt local command execution in Codex.
 2. Provide exact `bbdc` commands for the user to run locally.
 3. Continue once the user shares command output.

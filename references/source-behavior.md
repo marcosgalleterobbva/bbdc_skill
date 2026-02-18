@@ -65,14 +65,14 @@ User profile/settings retrieval (`account user`, `account settings`, optional in
 4. `BITBUCKET_USER`
 
 ## Codex runtime behavior
-When executed from Codex agent runtimes, DNS/VPN/network access to Bitbucket may be unavailable even if the user can run `bbdc` locally.
+For this BBVA deployment, Codex agent runtimes should be treated as unable to execute `bbdc` against Bitbucket.
 
 Typical failure signature:
 - `Request failed: HTTPSConnectionPool(... NameResolutionError ... Failed to resolve ...)`
 
 Recommended handling in the skill:
-- Do not keep retrying the same call in Codex.
-- Switch to command-only guidance and ask the user to run commands locally.
+- Never execute `bbdc` in Codex.
+- Always provide command-only guidance and ask the user to run commands locally.
 - Continue once command output is provided by the user.
 
 ## Raw vs JSON responses

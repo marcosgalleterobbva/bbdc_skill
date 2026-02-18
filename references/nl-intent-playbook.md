@@ -38,17 +38,16 @@ Use this playbook to map user requests into concrete `bbdc` commands.
 
 ## Clarification Rules
 - If `project` or `repo` is missing for PR intents, ask for both in one message.
-- If `pr_id` is missing for PR-scoped intents, ask for it before any execution.
+- If `pr_id` is missing for PR-scoped intents, ask for it before generating commands.
 - If a profile/settings intent has no `user_slug` and no env fallback, ask for `user_slug`.
 - If a request is ambiguous between single and batch, ask whether to run one PR or many.
-- If high-risk (merge/rebase/decline/delete or batch mutating), confirm intent before execution.
+- If high-risk (merge/rebase/decline/delete or batch mutating), confirm intent before generating commands.
 
-## Codex Runtime Fallback
-- If command execution fails in Codex with DNS/network errors (for example `NameResolutionError`, failed to resolve host, connection timeout), switch to command-only mode.
-- In command-only mode:
-  - Provide exact commands for the user to run locally.
-  - Ask for pasted output (JSON or terminal output).
-  - Resume analysis/next commands from the user-provided output.
+## Codex Runtime Model (BBVA)
+- Never execute `bbdc` in Codex.
+- Always provide exact commands for the user to run locally.
+- Ask for pasted output (JSON or terminal output).
+- Resume analysis/next commands from the user-provided output.
 
 ## Safe Defaults
 - Prefer read-only commands when the request can be satisfied without mutation.

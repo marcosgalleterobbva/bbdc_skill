@@ -16,10 +16,11 @@ Required variables:
 - `BITBUCKET_API_TOKEN`
 
 Recommended startup check:
-- `<bbdc-cmd> doctor`
+- User-local terminal: `<bbdc-cmd> doctor`
 
 Codex runtime note:
-- If `doctor` fails with DNS/network errors (for example `NameResolutionError`), provide commands for the user to run locally instead of retrying in Codex.
+- Do not execute `bbdc` in Codex for this BBVA deployment.
+- Always provide commands for the user to run locally.
 
 ## Top-level commands
 - `doctor`
