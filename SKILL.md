@@ -53,6 +53,8 @@ Prefer this skill for pull request lifecycle work, authenticated account lookups
   - Exact command(s) to run.
   - Expected output fields to copy back.
   - A short next-step command for verification.
+- If an account command returns `HTTP 401`, explain that BBVA users typically authenticate with
+  Project/Repository HTTP access tokens (not PAT), and those tokens may not access user-account endpoints.
 
 ## Command Routing
 Use `references/command-map.md` for grouped commands and examples.
@@ -124,3 +126,8 @@ When this happens:
 1. Do not attempt local command execution in Codex.
 2. Provide exact `bbdc` commands for the user to run locally.
 3. Continue once the user shares command output.
+
+HTTP 401 for account endpoints:
+- Treat as expected with BBVA HTTP access tokens.
+- Tell the user this is token-scope behavior (not necessarily a wrong token).
+- Prefer `account me` so partial results + `errors` can still be analyzed.

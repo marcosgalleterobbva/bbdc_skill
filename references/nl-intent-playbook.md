@@ -53,3 +53,5 @@ Use this playbook to map user requests into concrete `bbdc` commands.
 - Prefer read-only commands when the request can be satisfied without mutation.
 - Omit `--version` unless the user explicitly provides it; CLI auto-fetches when supported.
 - For exploratory queries, include `--limit` and `--max-items` to constrain results.
+- For BBVA account introspection, prefer `account me` because it can return partial results and explicit `errors`.
+- If output shows `HTTP 401` on account endpoints, explain HTTP access token scope limits vs PAT.

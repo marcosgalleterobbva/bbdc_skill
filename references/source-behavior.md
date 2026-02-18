@@ -58,6 +58,10 @@ Default caps in command implementations:
 - `account ssh-keys` (`/ssh/latest/keys`)
 - `account gpg-keys` (`/gpg/latest/keys`)
 
+For BBVA HTTP access tokens:
+- Some user-account endpoints may return `401`.
+- `account me` is designed to return partial results with `errors` and `notes` instead of failing immediately.
+
 User profile/settings retrieval (`account user`, `account settings`, optional in `account me`) resolves slug in this order:
 1. `--user-slug`
 2. `BITBUCKET_USER_SLUG`
@@ -74,6 +78,10 @@ Recommended handling in the skill:
 - Never execute `bbdc` in Codex.
 - Always provide command-only guidance and ask the user to run commands locally.
 - Continue once command output is provided by the user.
+
+When user output includes `HTTP 401` on account endpoints:
+- Explain that Project/Repository HTTP access tokens have narrower scope than PAT for user-account data.
+- Treat this as expected token-scope behavior.
 
 ## Raw vs JSON responses
 Some commands intentionally print raw text if the endpoint is non-JSON:

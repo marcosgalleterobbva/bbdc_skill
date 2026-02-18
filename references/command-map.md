@@ -35,6 +35,10 @@ Codex runtime note:
 - `account settings`
 - `account me`
 
+BBVA token scope note:
+- Project/Repository HTTP access tokens may return `401` for some account commands.
+- Use `account me` to get partial results plus structured `errors`.
+
 ## PR lifecycle commands
 - `pr list`
 - `pr get`

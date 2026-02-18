@@ -9,6 +9,10 @@ Codex skill for operating the `bbdc` Bitbucket Data Center CLI from natural-lang
    - `BITBUCKET_SERVER` (must end with `/rest`)
    - `BITBUCKET_API_TOKEN`
    - Optional for account profile/settings commands: `BITBUCKET_USER_SLUG`
+
+BBVA token note:
+- Teams commonly use Project/Repository HTTP access tokens.
+- Those tokens can return `401` for some user-account endpoints (`ssh-keys`, `gpg-keys`, `user`, `settings`).
 3. Install this skill under local Codex skills directory as `bbdc-cli`.
 
 ## Recommended distribution model
